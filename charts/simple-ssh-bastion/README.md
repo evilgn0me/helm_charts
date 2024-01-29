@@ -27,6 +27,8 @@ service:
   annotations:
     # with usage of external dns you can assign 
     external-dns.alpha.kubernetes.io/hostname: bastion.example.com.
+    # if you are using nlb loadbalancer you will need to increase connection idle timeout.
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "4000"
   #use this if you need whitelisting. This value depends on your loadBalancer type. Generally it works good with nlb in AWS.
   loadBalancerSourceRanges: 
     - "1.1.1.1/32"
