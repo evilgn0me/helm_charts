@@ -10,39 +10,39 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
-{{- if .Values.controller.service.clusterIP }}
-  clusterIP: {{ .Values.controller.service.clusterIP }}
+{{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
 {{- end }}
-{{- if .Values.controller.service.externalIPs }}
-  externalIPs: {{ toYaml .Values.controller.service.externalIPs | nindent 4 }}
+{{- if .Values.service.externalIPs }}
+  externalIPs: {{ toYaml .Values.service.externalIPs | nindent 4 }}
 {{- end }}
-{{- if .Values.controller.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.controller.service.loadBalancerIP }}
+{{- if .Values.service.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
 {{- end }}
-{{- if .Values.controller.service.loadBalancerSourceRanges }}
-  loadBalancerSourceRanges: {{ toYaml .Values.controller.service.loadBalancerSourceRanges | nindent 4 }}
+{{- if .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{ toYaml .Values.service.loadBalancerSourceRanges | nindent 4 }}
 {{- end }}
-{{- if .Values.controller.service.loadBalancerClass }}
-  loadBalancerClass: {{ .Values.controller.service.loadBalancerClass }}
+{{- if .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ .Values.service.loadBalancerClass }}
 {{- end }}
-{{- if hasKey .Values.controller.service "allocateLoadBalancerNodePorts" }}
-  allocateLoadBalancerNodePorts: {{ .Values.controller.service.allocateLoadBalancerNodePorts }}
+{{- if hasKey .Values.service "allocateLoadBalancerNodePorts" }}
+  allocateLoadBalancerNodePorts: {{ .Values.service.allocateLoadBalancerNodePorts }}
 {{- end }}
-{{- if .Values.controller.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ .Values.controller.service.externalTrafficPolicy }}
+{{- if .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
 {{- end }}
-{{- if .Values.controller.service.sessionAffinity }}
-  sessionAffinity: {{ .Values.controller.service.sessionAffinity }}
+{{- if .Values.service.sessionAffinity }}
+  sessionAffinity: {{ .Values.service.sessionAffinity }}
 {{- end }}
-{{- if .Values.controller.service.healthCheckNodePort }}
-  healthCheckNodePort: {{ .Values.controller.service.healthCheckNodePort }}
+{{- if .Values.service.healthCheckNodePort }}
+  healthCheckNodePort: {{ .Values.service.healthCheckNodePort }}
 {{- end }}
 {{- if semverCompare ">=1.21.0-0" .Capabilities.KubeVersion.Version -}}
-{{- if .Values.controller.service.ipFamilyPolicy }}
-  ipFamilyPolicy: {{ .Values.controller.service.ipFamilyPolicy }}
+{{- if .Values.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
 {{- end }}
-{{- if .Values.controller.service.ipFamilies }}
-  ipFamilies: {{ toYaml .Values.controller.service.ipFamilies | nindent 4 }}
+{{- if .Values.service.ipFamilies }}
+  ipFamilies: {{ toYaml .Values.service.ipFamilies | nindent 4 }}
 {{- end }}
 {{- end }}
   ports:
