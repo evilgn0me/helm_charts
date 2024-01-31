@@ -34,11 +34,17 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PS1
+              value: "\\[\\033[01;32m\\]\\u\\[\\033[00m\\]@\\[\\033[01;33m\\]{{ .Values.bastion.hostname }}\\[\\033[00m\\]:\\w\\$ "
           command: ["/bin/sh", "-c"]
           args:
             - |
               apk update;
               apk add openssh;
+              {{- range .Values.bastion.packages }}
+              apk add "{{ . }}";
+              {{- end }}
               if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
                 # Generate SSH keys
                 ssh-keygen -A
@@ -71,15 +77,19 @@ spec:
             mountPath: /etc/ssh/sshd_config
             subPath: sshd_config
           {{- if .Values.persistence.enabled }}
-          - name: sshd
+          - name: {{ include "simple-ssh-bastion.fullname" . }}
             mountPath: /etc/ssh
+            subPath: ssh
+          - name: {{ include "simple-ssh-bastion.fullname" . }}
+            mountPath: /home/{{ .Values.bastion.sshUser }}
+            subPath: home
           {{- end }}
       volumes:   
       - name: ssh-config
         configMap:
           name: {{ include "simple-ssh-bastion.fullname" . }}-ssh-config
       {{- if .Values.persistence.enabled }}
-      - name: sshd
+      - name: {{ include "simple-ssh-bastion.fullname" . }}
         persistentVolumeClaim:
           claimName: {{ include "simple-ssh-bastion.fullname" . }}
       {{- end }}

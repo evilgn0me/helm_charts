@@ -6,6 +6,7 @@
 replicaCount: 1
 
 bastion:
+  hostname: bastion
   sshUser: bastion
   sshKeys:
     - "ssh-ed25519 ADD_YOUR_KEY_HERE evilgn0me@github"
@@ -15,6 +16,8 @@ bastion:
     ClientAliveCountMax: 3
     PermitRootLogin: "no"
     PasswordAuthentication: "no"
+  packages:
+    - "nano"
 
 service:
   type: LoadBalancer
