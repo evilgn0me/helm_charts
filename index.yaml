@@ -3,6 +3,19 @@ entries:
   simple-ssh-bastion:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2024-01-31T17:51:11.760193875Z"
+    description: A Helm chart for Kubernetes
+    digest: ac685ff6b0bb060282cfa2ec6d4d7ea3a347d5957c6e8f2b0ed6338b828914e0
+    maintainers:
+    - email: evilgn0me@users.noreply.github.com
+      name: evilgn0me
+    name: simple-ssh-bastion
+    type: application
+    urls:
+    - https://github.com/evilgn0me/helm-charts/releases/download/simple-ssh-bastion-0.1.5/simple-ssh-bastion-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2024-01-31T17:39:08.087945275Z"
     description: A Helm chart for Kubernetes
     digest: 1299c92f5ceefcb71763a905cffde53f3539625d0e8043f89354cfd2be0979d1
@@ -53,4 +66,4 @@ entries:
     urls:
     - https://github.com/evilgn0me/helm-charts/releases/download/simple-ssh-bastion-0.1.1/simple-ssh-bastion-0.1.1.tgz
     version: 0.1.1
-generated: "2024-01-31T17:39:08.087960493Z"
+generated: "2024-01-31T17:51:11.760222328Z"
