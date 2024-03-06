@@ -1,6 +1,6 @@
 apiVersion: v2
 name: simple-ssh-bastion
-description: A Helm chart for Kubernetes
+description: Simple ssh-bastion chart, to create bastion host in kubernetes based on pure alpine docker image.
 
 # A chart can be either an 'application' or a 'library' chart.
 #
