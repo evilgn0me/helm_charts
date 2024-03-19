@@ -6,6 +6,12 @@ metadata:
     {{- include "simple-ssh-bastion.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  {{- if .Values.strategy }}
+  strategy:
+    {{- with .Values.strategy }}
+      {{- toYaml . | nindent 2 }}
+    {{- end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "simple-ssh-bastion.selectorLabels" . | nindent 6 }}

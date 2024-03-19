@@ -38,6 +38,12 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
 
+# deployment strategy, since by default we are creating persistance this should be set to 100 max unavailable.
+strategy:
+  rollingUpdate:
+    maxSurge: 100%
+    maxUnavailable: 100%
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
