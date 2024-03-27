@@ -108,4 +108,15 @@ entries:
     urls:
     - https://github.com/evilgn0me/helm-charts/releases/download/simple-ssh-bastion-0.1.1/simple-ssh-bastion-0.1.1.tgz
     version: 0.1.1
-generated: "2024-03-19T11:32:14.33776921Z"
+  supportpal:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-03-27T12:31:48.835867585Z"
+    description: A Helm chart for Kubernetes
+    digest: a7864dae4025680c49ca2f374d06792b3256a77cdb3f6fb5de4a72fb0a4cae2f
+    name: supportpal
+    type: application
+    urls:
+    - https://github.com/evilgn0me/helm-charts/releases/download/supportpal-0.1.0/supportpal-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-03-27T12:31:48.835890358Z"
