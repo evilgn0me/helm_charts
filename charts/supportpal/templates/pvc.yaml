@@ -1,0 +1,13 @@
+{{- range $key, $value := .Values.persistence }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $key | trunc 63 | trimSuffix "-" }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ $value.size }}
+---
+{{- end }}
