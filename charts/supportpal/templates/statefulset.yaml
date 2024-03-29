@@ -1,0 +1,162 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "supportpal.fullname" . }}
+  labels:
+    {{- include "supportpal.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "supportpal.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "supportpal.labels" . | nindent 8 }}
+	{{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "supportpal.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.persistence.enabled }}
+      initContainers:
+        - name: init-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: ["sh", "-c", "if command -v sudo >/dev/null 2>&1; then sudo rm -f /etc/apt/sources.list.d/*; fi && \
+                            if command -v sudo >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y rsync; else apt-get update && apt-get install -y rsync; fi && \
+                            if [ -d /var/www/supportpal/storage/ ]; then \
+                              if command -v sudo >/dev/null 2>&1; then \
+                                sudo rsync -av --ignore-errors /var/www/supportpal/storage/* /mnt/storage/; \
+                              else \
+                                rsync -av --ignore-errors /var/www/supportpal/storage/* /mnt/storage/; \
+                              fi; \
+                            fi; \
+                            if [ -d /var/www/supportpal/config/production/ ]; then \
+                              if command -v sudo >/dev/null 2>&1; then \
+                                sudo rsync -av --ignore-errors /var/www/supportpal/config/production/* /mnt/production/; \
+                              else \
+                                rsync -av --ignore-errors /var/www/supportpal/config/production/* /mnt/production/; \
+                              fi; \
+                            fi; \
+                            if [ -d /var/www/supportpal/addons/ ]; then \
+                              if command -v sudo >/dev/null 2>&1; then \
+                                sudo rsync -av --ignore-errors /var/www/supportpal/addons/* /mnt/addons/; \
+                              else \
+                                rsync -av --ignore-errors /var/www/supportpal/addons/* /mnt/addons/; \
+                              fi; \
+                            fi; \
+                            if [ ! -d /mnt/log/apache2 ]; then \
+                              if command -v sudo >/dev/null 2>&1; then \
+                                sudo mkdir -p /mnt/log/apache2; \
+                              else \
+                                mkdir -p /mnt/log/apache2; \
+                              fi; \
+                            fi; \
+                            owner=$(stat -c '%U' /var/www/supportpal);
+                            if command -v sudo >/dev/null 2>&1; then \
+                              sudo find /mnt -type d -exec chown $owner:$owner {} +; \
+                            else \
+                              find /mnt -type d -exec chown $owner:$owner {} +; \
+                            fi; "]
+          volumeMounts:
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /mnt/production/
+              subPath: supportpal_configs
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /mnt/storage/
+              subPath: supportpal_storage
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /mnt/addons/
+              subPath: supportpal_addons
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /mnt/log/
+              subPath: supportpal_logs
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          # startupProbe:
+          #   httpGet:
+          #     path: /
+          #     port: http
+          #   failureThreshold: 30
+          #   periodSeconds: 10
+          env:
+          - name: "HTTPS_ENABLED"
+            value: "0"
+          - name: "DOMAIN_NAME"
+            value: "helpdesk.b2core.org"
+          - name: "TRUSTED_PROXY_IPS"
+            value: "*"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.persistence.enabled }}
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /var/lib/mysql/
+              subPath: supportpal_db
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /var/www/supportpal/config/production/
+              subPath: supportpal_configs
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /redis-data/
+              subPath: supportpal_redis
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /var/www/supportpal/storage/
+              subPath: supportpal_storage
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /var/log/
+              subPath: supportpal_logs
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /var/www/supportpal/addons/
+              subPath: supportpal_addons
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /caddy/
+              subPath: supportpal_caddy
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /meilisearch/
+              subPath: supportpal_meilisearch
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: {{ include "supportpal.fullname" . }}
+          persistentVolumeClaim:
+            claimName: {{ include "supportpal.fullname" . }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
