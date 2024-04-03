@@ -32,7 +32,7 @@ spec:
       initContainers:
         - name: init-container
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ["sh", "-c", "if command -v sudo >/dev/null 2>&1; then sudo rm -f /etc/apt/sources.list.d/*; fi && \
+          command: ["sh", "-c", "if command -v sudo >/dev/null 2>&1; then sudo rm -f /etc/apt/sources.list.d/*; else rm -f /etc/apt/sources.list.d/*; fi && \
                             if command -v sudo >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y rsync; else apt-get update && apt-get install -y rsync; fi && \
                             if [ -d /var/www/supportpal/storage/ ]; then \
                               if command -v sudo >/dev/null 2>&1; then \
@@ -90,29 +90,13 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8080
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # startupProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          #   failureThreshold: 30
-          #   periodSeconds: 10
           env:
-          - name: "HTTPS_ENABLED"
-            value: "0"
-          - name: "DOMAIN_NAME"
-            value: "helpdesk.b2core.org"
-          - name: "TRUSTED_PROXY_IPS"
-            value: "*"
+          {{- range $key, $value := .Values.env }}
+            - name: "{{ $key }}"
+              value: "{{ $value }}"
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:

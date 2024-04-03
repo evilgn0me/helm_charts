@@ -4,6 +4,8 @@
 
 replicaCount: 1
 
+env: {}
+
 image:
   repository: public.ecr.aws/supportpal/helpdesk-monolithic
   pullPolicy: IfNotPresent
@@ -43,37 +45,41 @@ service:
 
 ingress:
   enabled: true
-  className: "nginx"
+  className: "nginx-public"
   annotations: 
     acme.cert-manager.io/http01-edit-in-place: "true"
     cert-manager.io/cluster-issuer: letsencrypt
     cert-manager.io/issue-temporary-certificate: "true"
-    kubernetes.io/ingress.class: nginx
+    kubernetes.io/ingress.class: nginx-public
     kubernetes.io/tls-acme: "true"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-buffering: "on"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/secure-backends: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header X-Forwarded-Host $http_host;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-For $remote_addr;
-          proxy_set_header Connection "upgrade";
-          proxy_cache_bypass $http_upgrade;
+          add_header X-Frame-Options SAMEORIGIN always;
+          add_header X-Content-Type-Options nosniff always;
+          add_header X-XSS-Protection "1; mode=block" always;
+          add_header Referrer-Policy strict-origin-when-cross-origin always;
+          set $user_request 0;
+          if ($request_method = GET) {
+              set $user_request "GET";
+          }
+          if ($request_uri ~* "^(.*/)index\.php/?(.*)$") {
+              set $user_request "${user_request}-index.php";
+          }
+          if ($user_request = "GET-index.php") {
+              return 301 $1$2;
+          }
   hosts:
-    - host: helpdesk.b2core.org
+    - host: supportpal.example.com
       paths:
         - path: /
           pathType: ImplementationSpecific
   tls: 
     - secretName: helpdesk-tls
       hosts:
-        - helpdesk.b2core.org
+        - supportpal.example.com
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -82,10 +88,10 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 2
-    memory: 5128Mi
+    memory: 3148Mi
   requests:
     cpu: 1
-    memory: 4096Mi
+    memory: 2048Mi
 
 nodeSelector: {}
 
