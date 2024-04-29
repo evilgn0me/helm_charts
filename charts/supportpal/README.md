@@ -1,6 +1,7 @@
 # SupportPal helm chart 
 
 This is unofficial helm chart for SupportPal. It runs monolithic SupportPal installation.
+We will deploy statefulset with pod that has no probes at all. This is required so you can shell inside container and run migration scripts.
 You need to use ingress-nginx with this, since you need configuration-snippet. Without configuration-snippet annotation it won't work.
 
 ```
@@ -42,4 +43,5 @@ ingress:
       hosts:
         - supportpal.example.com
 ```
+
 
