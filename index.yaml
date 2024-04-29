@@ -111,6 +111,16 @@ entries:
   supportpal:
   - apiVersion: v2
     appVersion: 1.16.0
+    created: "2024-04-29T10:45:57.633181695Z"
+    description: A Helm chart for Kubernetes
+    digest: 74443c64f084f3c7782d52602ef531ffb9b55ba438ee48463ac57bdb9cb660cf
+    name: supportpal
+    type: application
+    urls:
+    - https://github.com/evilgn0me/helm-charts/releases/download/supportpal-0.1.5/supportpal-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v2
+    appVersion: 1.16.0
     created: "2024-04-03T14:22:48.450171974Z"
     description: A Helm chart for Kubernetes
     digest: f82cccb46dae5c395876e642fd72ef9a83210cab80537d68a2e04eb9a487dc75
@@ -159,4 +169,4 @@ entries:
     urls:
     - https://github.com/evilgn0me/helm-charts/releases/download/supportpal-0.1.0/supportpal-0.1.0.tgz
     version: 0.1.0
-generated: "2024-04-03T14:22:48.450216227Z"
+generated: "2024-04-29T10:45:57.633218544Z"
