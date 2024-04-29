@@ -55,6 +55,13 @@ spec:
                                 rsync -av --ignore-errors /var/www/supportpal/addons/* /mnt/addons/; \
                               fi; \
                             fi; \
+                            if [ -d /customization/ ]; then \
+                              if command -v sudo >/dev/null 2>&1; then \
+                                sudo rsync -av --ignore-errors /customization/* /mnt/customization/; \
+                              else \
+                                rsync -av --ignore-errors /customization/* /mnt/customization/; \
+                              fi; \
+                            fi; \
                             if [ ! -d /mnt/log/apache2 ]; then \
                               if command -v sudo >/dev/null 2>&1; then \
                                 sudo mkdir -p /mnt/log/apache2; \
@@ -81,6 +88,9 @@ spec:
             - name: {{ include "supportpal.fullname" . }}
               mountPath: /mnt/log/
               subPath: supportpal_logs
+            - name: {{ include "supportpal.fullname" . }}
+              mountPath: /mnt/customization/
+              subPath: supportpal_customization
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
