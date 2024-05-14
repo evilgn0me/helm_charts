@@ -1,6 +1,23 @@
 apiVersion: v2
 name: domain_exporter
 description: Exports the expiration time of your domains as prometheus metrics.
+long_description: |
+  This Helm chart deploys the [caarlos0/domain_exporter](https://github.com/caarlos0/domain_exporter).
+  
+  ## Prerequisites
+  
+  - Kubernetes 1.19+
+  - Helm 3
+  
+  ## Installing the Chart
+  
+  To install the chart with the release name `my-domain_exporter`:
+  
+  ```bash
+  helm repo add evilgn0me https://evilgn0me.github.io/helm-charts/
+  helm install my-domain_exporter evilgn0me/domain_exporter
+  ```
+
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -15,7 +32,7 @@ type: application
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
 # Versions are expected to follow Semantic Versioning (https://semver.org/)
-version: 0.1.3
+version: 0.1.4
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application. Versions are not expected to
