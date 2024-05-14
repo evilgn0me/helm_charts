@@ -3,6 +3,16 @@ entries:
   domain_exporter:
   - apiVersion: v2
     appVersion: v1.23.0
+    created: "2024-05-14T11:17:58.358234116Z"
+    description: Exports the expiration time of your domains as prometheus metrics.
+    digest: ae6b6d2d403fb2754e7259e41cd11a5f6cfc07544ed8d04392c9a1efbbc58557
+    name: domain_exporter
+    type: application
+    urls:
+    - https://github.com/evilgn0me/helm-charts/releases/download/domain_exporter-0.1.2/domain_exporter-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v2
+    appVersion: v1.23.0
     created: "2024-05-14T11:09:53.034842803Z"
     description: Exports the expiration time of your domains as prometheus metrics.
     digest: b8f07363c6ec8d529d8b79ca4fdf2c47cee96fc0e32ebce34b98333ebdbf7eef
@@ -201,4 +211,4 @@ entries:
     urls:
     - https://github.com/evilgn0me/helm-charts/releases/download/supportpal-0.1.0/supportpal-0.1.0.tgz
     version: 0.1.0
-generated: "2024-05-14T11:09:53.03487905Z"
+generated: "2024-05-14T11:17:58.358276495Z"
