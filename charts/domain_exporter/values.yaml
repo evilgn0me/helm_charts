@@ -11,8 +11,8 @@ image:
   tag: ""
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: "domain-exporter"
+nameOverride: "domain-exporter"
+fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
